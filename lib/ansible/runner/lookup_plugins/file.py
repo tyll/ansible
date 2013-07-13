@@ -39,7 +39,7 @@ class LookupModule(object):
             if not os.path.exists(path):
                 raise errors.AnsibleError("%s does not exist" % path)
 
-            ret.append(codecs.open(path, encoding="utf8").read().rstrip())
+            ret.append(codecs.open(path, encoding="latin1").read())
 
 
         return ret

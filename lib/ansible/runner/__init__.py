@@ -51,7 +51,7 @@ except ImportError:
     HAS_ATFORK=False
 
 multiprocessing_runner = None
-        
+
 OUTPUT_LOCKFILE  = tempfile.TemporaryFile()
 PROCESS_LOCKFILE = tempfile.TemporaryFile()
 
@@ -180,11 +180,11 @@ class Runner(object):
         # 'smart' is the default since 1.2.1/1.3
         if self.transport == 'smart':
             cmd = subprocess.Popen(['ssh','-o','ControlPersist'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            (out, err) = cmd.communicate() 
+            (out, err) = cmd.communicate()
             if "Bad configuration option" in err:
                 self.transport = "paramiko"
             else:
-                self.transport = "ssh" 
+                self.transport = "ssh"
 
 
         # misc housekeeping
@@ -749,7 +749,7 @@ class Runner(object):
             complex_args_json = utils.jsonify(complex_args)
             # We force conversion of module_args to str because module_common calls shlex.split,
             # a standard library function that incorrectly handles Unicode input before Python 2.7.3.
-            encoded_args = repr(str(module_args))
+            encoded_args = repr(str(module_args.encode("latin1")))
             encoded_lang = repr(C.DEFAULT_MODULE_LANG)
             encoded_complex = repr(complex_args_json)
 
@@ -807,7 +807,7 @@ class Runner(object):
             for worker in workers:
                 worker.terminate()
                 worker.join()
-        
+
         results = []
         try:
             while not result_queue.empty():
