@@ -60,6 +60,7 @@ class PlayBook(object):
         timeout          = C.DEFAULT_TIMEOUT,
         remote_user      = C.DEFAULT_REMOTE_USER,
         remote_pass      = C.DEFAULT_REMOTE_PASS,
+        sudo_pass_callback = None,
         remote_port      = None,
         transport        = C.DEFAULT_TRANSPORT,
         private_key_file = C.DEFAULT_PRIVATE_KEY_FILE,
@@ -149,6 +150,7 @@ class PlayBook(object):
         self.become_method    = become_method
         self.become_user      = become_user
         self.become_pass      = become_pass
+        self.sudo_pass_callback = sudo_pass_callback
 
         self.callbacks.playbook = self
         self.runner_callbacks.playbook = self
@@ -615,6 +617,7 @@ class PlayBook(object):
             become_method=play.become_method,
             become_user=play.become_user,
             become_pass=self.become_pass,
+            sudo_pass_callback=self.sudo_pass_callback,
             vault_pass=self.vault_password,
             transport=play.transport,
             is_playbook=True,

@@ -171,7 +171,11 @@ class Connection(object):
                             raise errors.AnsibleError('Incorrect become password')
 
                     if stdout.endswith(prompt):
-                        raise errors.AnsibleError('Missing become password')
+                        if self.runner.sudo_pass_callback:
+                            stdin.write(self.runner.sudo_pass_callback() + "\n")
+                            stdout = stdout[:-1 * len(prompt)]
+                        else:
+                            raise errors.AnsibleError('Missing become password')
                     elif stdout.endswith("%s\r\n%s" % (incorrect_password, prompt)):
                         raise errors.AnsibleError('Incorrect become password')
 

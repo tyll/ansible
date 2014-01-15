@@ -1241,8 +1241,8 @@ def make_become_cmd(cmd, user, shell, method, flags=None, exe=None):
         # sudo prompt set with the -p option.
         prompt = '[sudo via ansible, key=%s] password: ' % randbits
         exe = exe or C.DEFAULT_SUDO_EXE
-        becomecmd = '%s -k && %s %s -S -p "%s" -u %s %s -c %s' % \
-            (exe, exe, flags or C.DEFAULT_SUDO_FLAGS, prompt, user, shell, pipes.quote('echo %s; %s' % (success_key, cmd)))
+        becomecmd = '%s %s -S -p "%s" -u %s %s -c %s' % \
+            (exe, flags or C.DEFAULT_SUDO_FLAGS, prompt, user, shell, pipes.quote('echo %s; %s' % (success_key, cmd)))
 
     elif method == 'su':
         exe = exe or C.DEFAULT_SU_EXE

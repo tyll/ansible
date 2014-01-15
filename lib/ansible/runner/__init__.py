@@ -156,6 +156,7 @@ class Runner(object):
         become_method=C.DEFAULT_BECOME_METHOD,
         become_user=C.DEFAULT_BECOME_USER,      # ex: 'root'
         become_pass=C.DEFAULT_BECOME_PASS,      # ex: 'password123' or None
+        sudo_pass_callback = None,          # Callback to ask for sudo password
         become_exe=C.DEFAULT_BECOME_EXE,        # ex: /usr/local/bin/sudo
         ):
 
@@ -204,6 +205,7 @@ class Runner(object):
         self.become_user_var  = become_user
         self.become_user      = None
         self.become_pass      = become_pass
+        self.sudo_pass_callback = sudo_pass_callback
         self.become_exe       = become_exe
         self.is_playbook      = is_playbook
         self.environment      = environment

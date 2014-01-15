@@ -28,7 +28,7 @@ class Task(object):
         'action', 'always_run', 'any_errors_fatal', 'args', 'become', 'become_method', 'become_pass',
         'become_user', 'changed_when', 'delay', 'delegate_to', 'environment', 'failed_when',
         'first_available_file', 'ignore_errors', 'local_action', 'meta', 'name', 'no_log',
-        'notify', 'register', 'remote_user', 'retries', 'run_once', 'su', 'su_pass', 'su_user',
+        'notify', 'register', 'remote_user', 'retries', 'run_once', 'su', 'su_pass', 'su_user', 'sudo_pass_callback',
         'sudo', 'sudo_pass', 'sudo_user', 'tags', 'transport', 'until', 'when',
     ]
 
@@ -167,6 +167,7 @@ class Task(object):
         self.become_method = ds.get('become_method', play.become_method)
         self.become_user   = ds.get('become_user', play.become_user)
         self.become_pass   = ds.get('become_pass', play.playbook.become_pass)
+        self.sudo_pass_callback= ds.get('sudo_pass_callback', play.playbook.sudo_pass_callback)
 
         # set only if passed in current task data
         if 'sudo' in ds or 'sudo_user' in ds:
@@ -260,7 +261,7 @@ class Task(object):
 
         self.items_lookup_plugin = ds.get('items_lookup_plugin', None)
         self.items_lookup_terms  = ds.get('items_lookup_terms', None)
-     
+
 
         self.ignore_errors = ds.get('ignore_errors', False)
         self.any_errors_fatal = ds.get('any_errors_fatal', play.any_errors_fatal)

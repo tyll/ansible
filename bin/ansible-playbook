@@ -68,6 +68,13 @@ def hostcolor(host, stats, color=True):
     return "%-26s" % host
 
 
+sudopass = ""
+def ask_sudo_pass():
+    global sudopass
+    if not sudopass:
+        sudopass = utils.ask_passwords(False, True)[1]
+    return sudopass
+
 def main(args):
     ''' run ansible-playbook operations '''
 
@@ -200,6 +207,7 @@ def main(args):
             become_method=options.become_method,
             become_user=options.become_user,
             become_pass=becomepass,
+            sudo_pass_callback=ask_sudo_pass,
             extra_vars=extra_vars,
             private_key_file=options.private_key_file,
             only_tags=only_tags,

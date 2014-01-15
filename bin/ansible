@@ -41,6 +41,13 @@ from ansible import callbacks
 from ansible import inventory
 ########################################################
 
+sudopass = ""
+def ask_sudo_pass():
+    global sudopass
+    if not sudopass:
+        sudopass = utils.ask_passwords(False, True)[1]
+    return sudopass
+
 class Cli(object):
     ''' code behind bin/ansible '''
 
@@ -159,6 +166,7 @@ class Cli(object):
             become=options.become,
             become_method=options.become_method,
             become_pass=becomepass,
+            sudo_pass_callback=ask_sudo_pass,
             become_user=options.become_user,
             extra_vars=extra_vars,
         )
