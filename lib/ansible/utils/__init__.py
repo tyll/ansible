@@ -1221,7 +1221,7 @@ def boolean(value):
     else:
         return False
 
-def make_become_cmd(cmd, user, shell, method, flags=None, exe=None):
+def make_become_cmd(cmd, user, shell, method, flags=None, exe=None, verify_password=True):
     """
     helper function for connection plugins to create privilege escalation commands
     """
@@ -1241,7 +1241,11 @@ def make_become_cmd(cmd, user, shell, method, flags=None, exe=None):
         # sudo prompt set with the -p option.
         prompt = '[sudo via ansible, key=%s] password: ' % randbits
         exe = exe or C.DEFAULT_SUDO_EXE
-        becomecmd = '%s %s -S -p "%s" -u %s %s -c %s' % \
+        if verify_password:
+            becomecmd = '%s -k && ' % (exe)
+        else:
+            becomecmd = ''
+        becomecmd += '%s %s -S -p "%s" -u %s %s -c %s' % \
             (exe, flags or C.DEFAULT_SUDO_FLAGS, prompt, user, shell, pipes.quote('echo %s; %s' % (success_key, cmd)))
 
     elif method == 'su':
@@ -1267,11 +1271,11 @@ def make_become_cmd(cmd, user, shell, method, flags=None, exe=None):
     return (('%s -c ' % shell) + pipes.quote(becomecmd), prompt, success_key)
 
 
-def make_sudo_cmd(sudo_exe, sudo_user, executable, cmd):
+def make_sudo_cmd(sudo_exe, sudo_user, executable, cmd, verify_password=True):
     """
     helper function for connection plugins to create sudo commands
     """
-    return make_become_cmd(cmd, sudo_user, executable, 'sudo', C.DEFAULT_SUDO_FLAGS, sudo_exe)
+    return make_become_cmd(cmd, sudo_user, executable, 'sudo', C.DEFAULT_SUDO_FLAGS, sudo_exe, verify_password=verify_password)
 
 
 def make_su_cmd(su_user, executable, cmd):

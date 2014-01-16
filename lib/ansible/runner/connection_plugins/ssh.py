@@ -287,7 +287,11 @@ class Connection(object):
         ssh_cmd += [self.host]
 
         if self.runner.become and sudoable:
-            becomecmd, prompt, success_key = utils.make_become_cmd(cmd, become_user, executable, self.runner.become_method, '', self.runner.become_exe)
+            if self.runner.become_pass is None:
+                verify_password = False
+            else:
+                verify_password = True
+            becomecmd, prompt, success_key = utils.make_become_cmd(cmd, become_user, executable, self.runner.become_method, '', self.runner.become_exe, verify_password=verify_password)
             ssh_cmd.append(becomecmd)
         else:
             prompt = None
