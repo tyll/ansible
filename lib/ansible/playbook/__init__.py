@@ -70,6 +70,7 @@ class PlayBook(object):
         extra_vars       = None,
         only_tags        = None,
         skip_tags        = None,
+        only_tasks       =  "",
         subset           = C.DEFAULT_SUBSET,
         inventory        = None,
         check            = False,
@@ -142,6 +143,7 @@ class PlayBook(object):
         self.private_key_file = private_key_file
         self.only_tags        = only_tags
         self.skip_tags        = skip_tags
+        self.only_tasks       = only_tasks
         self.any_errors_fatal = any_errors_fatal
         self.vault_password   = vault_password
         self.force_handlers   = force_handlers
@@ -720,6 +722,21 @@ class PlayBook(object):
                     if should_run:
                         if task_set.intersection(self.skip_tags):
                             should_run = False
+
+            # only run the task if name or action matches the filter
+            if should_run:
+                should_run = False
+                for term in self.only_tasks:
+                    try:
+                        if term in task.name or term in task.action or \
+                                term in task.tags:
+                            should_run = True
+                            break
+                    except AttributeError:
+                        # the first task raises an AttributeError when the
+                        # property name or action is accessed.
+                        should_run = True
+                        break
 
             if should_run:
                 tasks.append(task)
